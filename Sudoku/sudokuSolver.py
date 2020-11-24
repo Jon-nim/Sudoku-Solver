@@ -1,14 +1,22 @@
 from pygame import *
 from random import randint
-
+from copy import deepcopy
 #Example of backtracking: not for optimization looking for ALL solutions. AKA brute force approach to solving problems.
 # depth first search
+
+
+
+
 
 class Sudoku(object):
 	def __init__(self):
 		self.puzzleSolution = []
 		self.puzzleEasy = []
+		self.puzzleNormal = []
+		self.puzzleHard = []
+
 		self.createPuzzle()
+		self.makeEasy()
 
 	def createPuzzle(self):
 		newGrid = [[0,0,0,  0,0,0,  0,0,0],
@@ -31,10 +39,128 @@ class Sudoku(object):
 				newGrid[1+i][j+i] = array.pop(randint(0,len(array)-1))
 				newGrid[2+i][j+i] = array.pop(randint(0,len(array)-1))
 		self.puzzleSolution = Node(newGrid).solvePuzzleSetup()
-		
 
-	def printPuzzle(self):
-		for i in self.puzzleSolution:
+
+	
+	def makeEasy(self):
+		self.puzzleEasy = deepcopy(self.puzzleSolution)
+
+		easy = 38
+		pos = 0
+		while easy > 0:
+			###########
+			if pos > 7:
+				pos = 0
+			###########
+
+			for i in range(self.roll()):
+				x = self.roll() + pos
+				y = self.roll()
+				if self.puzzleEasy[x][y] == 0:
+					continue
+				self.puzzleEasy[x][y] = 0
+				easy -= 1
+
+			for i in range(self.roll()):
+				x = self.roll() + pos
+				y = self.roll() + 3
+				if self.puzzleEasy[x][y] == 0:
+					continue
+				self.puzzleEasy[x][y] = 0
+				easy -= 1
+
+			for i in range(self.roll()):
+				x = self.roll() + pos
+				y = self.roll() +  + 6
+				if self.puzzleEasy[x][y] == 0:
+					continue
+				self.puzzleEasy[x][y] = 0
+				easy -= 1 
+			pos += 3
+
+
+	def makeHard(self):
+		self.puzzleHard = deepcopy(self.puzzleSolution)
+		hard = 25
+		pos = 0
+		while hard > 0:
+			###########
+			if pos > 7:
+				pos = 0
+			###########
+
+			for i in range(self.roll()):
+				x = self.roll() + pos
+				y = self.roll()
+				if self.puzzleEasy[x][y] == 0:
+					continue
+				self.puzzleEasy[x][y] = 0
+				hard -= 1
+
+			for i in range(self.roll()):
+				x = self.roll() + pos
+				y = self.roll() + 3
+				if self.puzzleEasy[x][y] == 0:
+					continue
+				self.puzzleEasy[x][y] = 0
+				hard -= 1
+
+			for i in range(self.roll()):
+				x = self.roll() + pos
+				y = self.roll() +  + 6
+				if self.puzzleEasy[x][y] == 0:
+					continue
+				self.puzzleEasy[x][y] = 0
+				hard -= 1 
+			pos += 3
+
+
+
+	def makeNormal(self):
+		self.puzzleNormal = deepcopy(self.puzzleSolution)
+		normal = 30
+		pos = 0
+		while normal > 0:
+			###########
+			if pos > 7:
+				pos = 0
+			###########
+
+			for i in range(self.roll()):
+				x = self.roll() + pos
+				y = self.roll()
+				if self.puzzleEasy[x][y] == 0:
+					continue
+				self.puzzleEasy[x][y] = 0
+				normal -= 1
+
+			for i in range(self.roll()):
+				x = self.roll() + pos
+				y = self.roll() + 3
+				if self.puzzleEasy[x][y] == 0:
+					continue
+				self.puzzleEasy[x][y] = 0
+				normal -= 1
+
+			for i in range(self.roll()):
+				x = self.roll() + pos
+				y = self.roll() +  + 6
+				if self.puzzleEasy[x][y] == 0:
+					continue
+				self.puzzleEasy[x][y] = 0
+				normal -= 1 
+			pos += 3
+	
+	
+	
+	def roll(self):
+		return randint(0,2)
+
+
+
+
+	def printPuzzle(self, x):
+		for i in x:
 			for spot in i:
 				print(str(spot) + ",",end = '')
 			print('\n')
