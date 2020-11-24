@@ -19,64 +19,126 @@ def drawSudokuScreen(screen):
     for i in range(4):
         pygame.draw.line(screen,(0,0,0),((i * round((screenWidth/3)),0)), (i * round((screenWidth/3)),screenHeight), 2)    
 
-def drawRect(screen,xpos, ypos):
+def drawRect(screen,xpos, ypos, rectColor):
     if (xpos == None or ypos == None):
+        return
+    elif xpos * screenWidth/9 +1 > screenWidth:
         return
     else:
         x = (xpos * (screenWidth/9)+1)
         y = (ypos * (screenHeight/9)+1)
 
-        pygame.draw.rect(screen, (233,233,233), (x,y,((screenWidth/9) - 1),((screenHeight/9)-1)))
+        pygame.draw.rect(screen, (rectColor), (x,y,((screenWidth/9) - 1),((screenHeight/9)-1)))
 
-newGrid = [ [1,2,3,  4,5,6,  7,8,9],
-		    [0,0,0,  0,0,0,  0,0,0],
-			[0,0,0,  0,0,0,  0,0,0],
-
-			[0,0,0,  0,0,0,  0,0,0],
-		    [0,0,0,  0,0,0,  0,0,0],
-		    [0,0,0,  0,0,0,  0,0,0],
-
-     	    [0,0,0,  0,0,0,  0,0,0], 
-		    [0,0,0,  0,0,0,  0,0,0],
-		    [0,0,0,  0,0,0,  0,0,0]]
-
-def drawNums(screen):
+def drawNums(screen, newGrid):
     for i in range(9):
         for j in range(9):
             if newGrid[i][j] == 0:
                 continue
-            x = font.render(str(newGrid[i][j]),False,(0,0,0))
+            x = font.render(str(newGrid[i][j]),True,(0,0,0))
             screen.blit(x, ((j * screenWidth/9 + 20), (i * screenHeight/9 + 10)))
+
+def drawTemp(screen, text,xpos, ypos):
+    if (xpos == None or ypos == None):
+        return
+    elif xpos * screenWidth/9 +1 > screenWidth:
+        return
+    temp = font.render(text, True, (100,100,100))
+    screen.blit(temp, ((xpos * screenWidth/9 + 20), (ypos * screenHeight/9 + 10)) )
+
+def solve(sudoku, newGrid):
+    for i in range(9):
+        for spot in range(9):
+               newGrid[i][spot] = sudoku.puzzleSolution[i][spot]
+
+
+
 
 
 def main():
-    screen = pygame.display.set_mode((screenHeight,screenWidth))
+    screen = pygame.display.set_mode((screenHeight + 250,screenWidth))
     inputbox = pygame.Rect(0,0,screenWidth/9,screenHeight/9)
-    start = True
+    chooseDifficulty = 0
+    titleScreen = True
+    startPuzzle = False
     xpos = None
     ypos = None
-    
+    text = ""
+    rectColor1 = (233,233,233)
+    active = False
+    sudoku = sudokuSolver.Sudoku()
 
-    while(start == True):
+    
+    while(titleScreen):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT: sys.exit()
+        screen.fill((255,255,255))
+        title = font.render("Sudoku", True, (0,0,0))
+        screen.blit(title, (0,0))
+        pygame.display.flip()
+    
+    if chooseDifficulty == 1:
+        newGrid = sudoku.puzzleEasy
+    elif chooseDifficulty == 2:
+        newGrid = sudoku.puzzleNormal
+    elif chooseDifficulty == 3:
+        newGrid = sudoku.puzzleHard
+    
+    
+    solution = sudoku.puzzleSolution
+    
+   
+        
+
+    while(startPuzzle == True):
         for event in pygame.event.get():
             if event.type == pygame.QUIT: sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
+                active = True
                 x,y = pygame.mouse.get_pos()
+                rectColor1 = (233,233,233)
                 xpos = int(x/(screenWidth/9))
                 ypos = int(y/(screenHeight/9))
-            elif event.type == pygame.KEYDOWN():
-                
+                text = ""
+                if  xpos * screenWidth/9 +1 < screenWidth:
+                    if newGrid[ypos][xpos] > 0:
+                        active = False
+                        xpos = None
+                        ypos = None
+
+            elif event.type == pygame.KEYDOWN:
+                rectColor1 = (233,233,233)
+                if (event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER) and active :
+                    if text == "":
+                        pass
+                    elif int(text) == solution[ypos][xpos]:
+                        newGrid[ypos][xpos] = solution[ypos][xpos]
+                        text = ""
+                        active = False
+                        rectColor1 = (255,255,255)
+                    else:
+                        rectColor1 = (255,0,0)
+                        text = ''
+                elif event.key == pygame.K_BACKSPACE:
+                    text = ""
+                elif event.key == pygame.K_SPACE:
+                    solve(sudoku, newGrid)
+
+
+                else:
+                    if len(text) == 0:
+                        if event.unicode.isdigit() and active:
+                            text += event.unicode
         drawSudokuScreen(screen)
-        drawRect(screen,xpos, ypos)
-        drawNums(screen)
+        drawRect(screen,xpos, ypos, rectColor1)
+        drawNums(screen, newGrid)
+        drawTemp(screen, text, xpos,ypos)
         pygame.display.flip()
 
 
 
 
 main()
-
-
 
 
 
