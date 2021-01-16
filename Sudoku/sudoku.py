@@ -58,6 +58,7 @@ def solve(sudoku, newGrid):
 def main():
     screen = pygame.display.set_mode((screenHeight + 250,screenWidth))
     inputbox = pygame.Rect(0,0,screenWidth/9,screenHeight/9)
+    newGrid = []
     chooseDifficulty = 0
     titleScreen = True
     startPuzzle = False
@@ -67,14 +68,41 @@ def main():
     rectColor1 = (233,233,233)
     active = False
     sudoku = sudokuSolver.Sudoku()
+    easyButton = (screenWidth/4, screenHeight/2)
+    normalButton = (screenWidth/2, screenHeight/2)
+    hardButton = (screenWidth * .88, screenHeight/2)
+
 
     
     while(titleScreen):
         for event in pygame.event.get():
-            if event.type == pygame.QUIT: sys.exit()
+            if event.type == pygame.QUIT:   
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                x,y = pygame.mouse.get_pos()
+                if ((x >= easyButton[0] and x < normalButton[0] - 50) and (y >= easyButton[1] and  y < screenHeight/2 + 50)):
+                    chooseDifficulty = 1
+                    titleScreen = False
+                    startPuzzle = True
+                elif (x >= normalButton[0] and x < hardButton[0] -50) and (y >= normalButton[1] and y < screenHeight/2 + 50):
+                    chooseDifficulty = 2
+                    titleScreen = False
+                    startPuzzle = True
+                elif (x >= hardButton[0] and x < hardButton[0] + 100) and (y >= hardButton[1] and y < screenHeight/2 + 50):
+                    chooseDifficulty = 3
+                    titleScreen = False
+                    startPuzzle = True
         screen.fill((255,255,255))
         title = font.render("Sudoku", True, (0,0,0))
-        screen.blit(title, (0,0))
+        screen.blit(title, (screenWidth/2,screenHeight/6))
+        easy = font.render("Easy", True, (0,0,0))
+        normal = font.render('Normal', True, (0,0,0))
+        hard = font.render("Hard", True, (0,0,0))
+        screen.blit(easy, (easyButton))
+        screen.blit(normal, (normalButton))
+        screen.blit(hard, (hardButton))
+
+        #pygame.draw.rect(screen, (255,), (x,y,((screenWidth/9) - 1),((screenHeight/9)-1)))
         pygame.display.flip()
     
     if chooseDifficulty == 1:
