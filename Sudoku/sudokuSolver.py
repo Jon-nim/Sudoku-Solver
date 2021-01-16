@@ -17,6 +17,8 @@ class Sudoku(object):
 
 		self.createPuzzle()
 		self.makeEasy()
+		self.makeNormal()
+		self.makeHard()
 
 	def createPuzzle(self):
 		newGrid = [[0,0,0,  0,0,0,  0,0,0],
@@ -45,7 +47,7 @@ class Sudoku(object):
 	def makeEasy(self):
 		self.puzzleEasy = deepcopy(self.puzzleSolution)
 
-		easy = 38
+		easy = 43
 		pos = 0
 		while easy > 0:
 			###########
@@ -81,7 +83,7 @@ class Sudoku(object):
 
 	def makeHard(self):
 		self.puzzleHard = deepcopy(self.puzzleSolution)
-		hard = 25
+		hard = 56
 		pos = 0
 		while hard > 0:
 			###########
@@ -92,25 +94,25 @@ class Sudoku(object):
 			for i in range(self.roll()):
 				x = self.roll() + pos
 				y = self.roll()
-				if self.puzzleEasy[x][y] == 0:
+				if self.puzzleHard[x][y] == 0:
 					continue
-				self.puzzleEasy[x][y] = 0
+				self.puzzleHard[x][y] = 0
 				hard -= 1
 
 			for i in range(self.roll()):
 				x = self.roll() + pos
 				y = self.roll() + 3
-				if self.puzzleEasy[x][y] == 0:
+				if self.puzzleHard[x][y] == 0:
 					continue
-				self.puzzleEasy[x][y] = 0
+				self.puzzleHard[x][y] = 0
 				hard -= 1
 
 			for i in range(self.roll()):
 				x = self.roll() + pos
 				y = self.roll() +  + 6
-				if self.puzzleEasy[x][y] == 0:
+				if self.puzzleHard[x][y] == 0:
 					continue
-				self.puzzleEasy[x][y] = 0
+				self.puzzleHard[x][y] = 0
 				hard -= 1 
 			pos += 3
 
@@ -118,7 +120,7 @@ class Sudoku(object):
 
 	def makeNormal(self):
 		self.puzzleNormal = deepcopy(self.puzzleSolution)
-		normal = 30
+		normal = 51
 		pos = 0
 		while normal > 0:
 			###########
@@ -129,25 +131,25 @@ class Sudoku(object):
 			for i in range(self.roll()):
 				x = self.roll() + pos
 				y = self.roll()
-				if self.puzzleEasy[x][y] == 0:
+				if self.puzzleNormal[x][y] == 0:
 					continue
-				self.puzzleEasy[x][y] = 0
+				self.puzzleNormal[x][y] = 0
 				normal -= 1
 
 			for i in range(self.roll()):
 				x = self.roll() + pos
 				y = self.roll() + 3
-				if self.puzzleEasy[x][y] == 0:
+				if self.puzzleNormal[x][y] == 0:
 					continue
-				self.puzzleEasy[x][y] = 0
+				self.puzzleNormal[x][y] = 0
 				normal -= 1
 
 			for i in range(self.roll()):
 				x = self.roll() + pos
 				y = self.roll() +  + 6
-				if self.puzzleEasy[x][y] == 0:
+				if self.puzzleNormal[x][y] == 0:
 					continue
-				self.puzzleEasy[x][y] = 0
+				self.puzzleNormal[x][y] = 0
 				normal -= 1 
 			pos += 3
 	
